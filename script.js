@@ -1,71 +1,98 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
-    color: #333;
+// Deine Google Apps Script Web-App-URL
+const apiUrl = "https://script.google.com/macros/s/AKfycbxaLTJcJQJI2Ys_9Cq-qQGb5F2aTalInfjiS90mq1SZ8GCMSmnRLe9jZganBG6Ev0YP/exec";
+
+// Daten speichern
+function saveDataToGoogleSheet(data) {
+    fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log("Erfolgreich gespeichert:", result);
+        loadDataFromGoogleSheet(); // Daten neu laden
+    })
+    .catch(error => console.error("Fehler beim Speichern:", error));
 }
 
-h1, h2 {
-    text-align: center;
-    color: #2c3e50;
+// Daten laden
+function loadDataFromGoogleSheet() {
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Geladene Daten:", data);
+            updateTableFromData(data);
+            updateSummaryFromData(data);
+        })
+        .catch(error => console.error("Fehler beim Laden der Daten:", error));
 }
 
-form {
-    max-width: 500px;
-    margin: 0 auto 30px auto;
-    padding: 20px;
-    background: #ff9a9e;
-    border-radius: 10px;
+// Tabelle aktualisieren
+function updateTableFromData(data) {
+    const tbody = document.querySelector("#data-table tbody");
+    tbody.innerHTML = "";
+
+    data.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${entry.date}</td>
+            <td>${entry.start}</td>
+            <td>${entry.end}</td>
+            <td>${entry.pause} min</td>
+            <td>${entry.homeoffice ? "Ja" : "Nein"}</td>
+            <td>${entry.workHours} h</td>
+            <td>${entry.notes}</td>
+        `;
+        tbody.appendChild(row);
+    });
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+// Salden aktualisieren
+function updateSummaryFromData(data) {
+    const now = new Date();
+    let weeklySum = 0, monthlySum = 0, yearlySum = 0;
+    const currentWeek = getWeekNumber(now), currentMonth = now.getMonth(), currentYear = now.getFullYear();
+
+    data.forEach(entry => {
+        const entryDate = new Date(entry.date);
+        const workHours = parseFloat(entry.workHours);
+
+        if (getWeekNumber(entryDate) === currentWeek && entryDate.getFullYear() === currentYear) weeklySum += workHours;
+        if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) monthlySum += workHours;
+        if (entryDate.getFullYear() === currentYear) yearlySum += workHours;
+    });
+
+    document.getElementById("weekly-sum").textContent = weeklySum.toFixed(2);
+    document.getElementById("monthly-sum").textContent = monthlySum.toFixed(2);
+    document.getElementById("yearly-sum").textContent = yearlySum.toFixed(2);
 }
 
-input, textarea, button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
+// Kalenderwoche berechnen
+function getWeekNumber(d) {
+    const oneJan = new Date(d.getFullYear(), 0, 1);
+    return Math.ceil(((d - oneJan) / (24 * 60 * 60 * 1000) + oneJan.getDay() + 1) / 7);
 }
 
-textarea {
-    resize: none;
-}
+// Event Listener für Speichern
+document.getElementById("save").addEventListener("click", () => {
+    const date = document.getElementById("date").value;
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+    const pause = parseInt(document.getElementById("pause").value) || 0;
+    const homeoffice = document.getElementById("homeoffice").checked;
+    const notes = document.getElementById("notes").value;
 
-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
+    if (!date || !start || !end) return alert("Bitte alle Pflichtfelder ausfüllen!");
 
-button:hover {
-    background-color: #2980b9;
-}
+    const startTime = new Date(`1970-01-01T${start}:00`);
+    const endTime = new Date(`1970-01-01T${end}:00`);
+    const workHours = ((endTime - startTime) / (1000 * 60 * 60)) - pause / 60;
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    if (workHours < 0) return alert("Arbeitsende muss nach Arbeitsbeginn liegen!");
 
-table th, table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
+    saveDataToGoogleSheet({ date, start, end, pause, homeoffice, workHours: workHours.toFixed(2), notes });
+});
 
-table th {
-    background-color: #007BFF;
-    color: white;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
+// Daten beim Laden der Seite abrufen
+loadDataFromGoogleSheet();
