@@ -1,46 +1,51 @@
 form {
-    max-width: 500px; /* Breiter, aber kompakter */
+    max-width: 500px; /* Breite des Formulars */
     margin: 0 auto 30px auto;
-    padding: 15px; /* Weniger Platz innen */
+    padding: 20px; /* Genügend Abstand innen */
     background: linear-gradient(135deg, #ff9a9e, #fad0c4); /* Rosa Farbverlauf */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     color: white;
+    box-sizing: border-box; /* Innenabstand wird in die Breite einbezogen */
 }
 
 label {
     display: block;
-    margin-bottom: 5px; /* Weniger Abstand zum Eingabefeld */
+    margin-bottom: 8px; /* Weniger Abstand zum Eingabefeld */
     font-weight: bold;
 }
 
 input, textarea, button {
-    width: 100%;
-    padding: 8px; /* Kompaktere Eingabefelder */
+    width: calc(100% - 20px); /* Breite reduziert um Padding */
+    padding: 10px;
     margin-bottom: 10px; /* Weniger Abstand zwischen den Feldern */
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 14px; /* Kleinere Schriftart */
+    font-size: 14px;
     color: #555;
+    box-sizing: border-box; /* Verhindert, dass Padding die Breite beeinflusst */
 }
 
 textarea {
-    resize: none; /* Verhindert Größenänderung des Textfeldes */
+    resize: none; /* Verhindert Größenänderung */
 }
 
 button {
+    width: 100%; /* Button füllt die Breite aus */
     background-color: #3498db;
     color: white;
     border: none;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    font-size: 14px; /* Konsistente Schriftgröße mit Eingabefeldern */
+    font-size: 14px;
 }
 
 button:hover {
     background-color: #2980b9;
     transform: scale(1.05);
+}
+
 }
 /* Standard-Design bleibt erhalten */
 
