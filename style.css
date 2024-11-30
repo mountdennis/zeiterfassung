@@ -31,7 +31,7 @@ label {
 }
 
 input, textarea, button {
-    width: calc(100% - 20px); /* Breite reduziert um Padding */
+    width: calc(100% - 30px); /* Breite reduziert um Padding */
     padding: 10px;
     margin-bottom: 10px; /* Weniger Abstand zwischen den Feldern */
     border: 1px solid #ddd;
