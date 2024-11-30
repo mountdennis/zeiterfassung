@@ -1,4 +1,3 @@
-// Deine Google Apps Script Web-App-URL
 const apiUrl = "https://script.google.com/macros/s/AKfycbxaLTJcJQJI2Ys_9Cq-qQGb5F2aTalInfjiS90mq1SZ8GCMSmnRLe9jZganBG6Ev0YP/exec";
 
 // Daten speichern
@@ -11,7 +10,7 @@ function saveDataToGoogleSheet(data) {
     .then(response => response.text())
     .then(result => {
         console.log("Erfolgreich gespeichert:", result);
-        loadDataFromGoogleSheet(); // Daten neu laden
+        loadDataFromGoogleSheet();
     })
     .catch(error => console.error("Fehler beim Speichern:", error));
 }
@@ -74,25 +73,18 @@ function getWeekNumber(d) {
     return Math.ceil(((d - oneJan) / (24 * 60 * 60 * 1000) + oneJan.getDay() + 1) / 7);
 }
 
-// Event Listener für Speichern
-document.getElementById("save").addEventListener("click", () => {
-    const date = document.getElementById("date").value;
-    const start = document.getElementById("start").value;
-    const end = document.getElementById("end").value;
-    const pause = parseInt(document.getElementById("pause").value) || 0;
-    const homeoffice = document.getElementById("homeoffice").checked;
-    const notes = document.getElementById("notes").value;
+// PDF-Export
+document.getElementById("export-pdf").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    if (!date || !start || !end) return alert("Bitte alle Pflichtfelder ausfüllen!");
+    // Titel und Überschrift
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(18);
+    doc.text("Monatsreport - Zeiterfassung", 10, 20);
 
-    const startTime = new Date(`1970-01-01T${start}:00`);
-    const endTime = new Date(`1970-01-01T${end}:00`);
-    const workHours = ((endTime - startTime) / (1000 * 60 * 60)) - pause / 60;
+    doc.setFontSize(12);
+    doc.text(`Erstellt am: ${new Date().toLocaleDateString()}`, 10, 30);
 
-    if (workHours < 0) return alert("Arbeitsende muss nach Arbeitsbeginn liegen!");
-
-    saveDataToGoogleSheet({ date, start, end, pause, homeoffice, workHours: workHours.toFixed(2), notes });
-});
-
-// Daten beim Laden der Seite abrufen
-loadDataFromGoogleSheet();
+    // Zusammenfassung der Salden
+    const weeklySum
