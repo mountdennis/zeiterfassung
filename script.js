@@ -1,129 +1,71 @@
-// Firebase-Konfiguration
-const firebaseConfig = {
-    apiKey: "AIzaSyASBbff8ynu8QZqBnUXEUm2fwP0EuQC6xk",
-    authDomain: "zeiterfassung-cadf1.firebaseapp.com",
-    databaseURL: "https://zeiterfassung-cadf1-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "zeiterfassung-cadf1",
-    storageBucket: "zeiterfassung-cadf1.appspot.com",
-    messagingSenderId: "250175428731",
-    appId: "1:250175428731:web:be0060330ea7114cfc2ade",
-    measurementId: "G-0MFXY3S6WW"
-};
-
-// Firebase initialisieren
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-// Daten in Firebase speichern
-function saveDataToFirebase(data) {
-    const dbRef = database.ref("timeData");
-    const newEntryRef = dbRef.push(); // Neuen Eintrag erstellen
-    newEntryRef.set(data)
-        .then(() => console.log("Daten erfolgreich in Firebase gespeichert"))
-        .catch(error => console.error("Fehler beim Speichern:", error));
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
-// Daten aus Firebase abrufen
-function loadDataFromFirebase() {
-    const dbRef = database.ref("timeData");
-    dbRef.on("value", (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            const allData = Object.values(data); // Objekt in Array umwandeln
-            updateTableFromData(allData); // Tabelle aktualisieren
-            updateSummaryFromData(allData); // Salden aktualisieren
-        }
-    });
+h1, h2 {
+    text-align: center;
+    color: #2c3e50;
 }
 
-// Tabelle mit Daten aktualisieren
-function updateTableFromData(data) {
-    const tbody = document.querySelector("#data-table tbody");
-    tbody.innerHTML = ""; // Tabelle leeren
-
-    data.forEach(entry => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${entry.date}</td>
-            <td>${entry.start}</td>
-            <td>${entry.end}</td>
-            <td>${entry.pause} min</td>
-            <td>${entry.homeoffice ? "Ja" : "Nein"}</td>
-            <td>${entry.workHours} h</td>
-            <td>${entry.notes}</td>
-        `;
-        tbody.appendChild(row);
-    });
+form {
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    padding: 20px;
+    background: #ff9a9e;
+    border-radius: 10px;
 }
 
-// Salden aktualisieren
-function updateSummaryFromData(data) {
-    const now = new Date();
-    let weeklySum = 0;
-    let monthlySum = 0;
-    let yearlySum = 0;
-
-    const currentWeek = getWeekNumber(now);
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    data.forEach(entry => {
-        const entryDate = new Date(entry.date);
-        const workHours = parseFloat(entry.workHours);
-
-        if (isNaN(workHours)) return;
-
-        if (getWeekNumber(entryDate) === currentWeek && entryDate.getFullYear() === currentYear) {
-            weeklySum += workHours;
-        }
-
-        if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
-            monthlySum += workHours;
-        }
-
-        if (entryDate.getFullYear() === currentYear) {
-            yearlySum += workHours;
-        }
-    });
-
-    document.getElementById("weekly-sum").textContent = weeklySum.toFixed(2);
-    document.getElementById("monthly-sum").textContent = monthlySum.toFixed(2);
-    document.getElementById("yearly-sum").textContent = yearlySum.toFixed(2);
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
 }
 
-// Funktion, um die aktuelle Kalenderwoche zu berechnen
-function getWeekNumber(d) {
-    const oneJan = new Date(d.getFullYear(), 0, 1);
-    const numberOfDays = Math.floor((d - oneJan) / (24 * 60 * 60 * 1000));
-    return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+input, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
-// Speichern-Button: Daten erfassen und speichern
-document.getElementById("save").addEventListener("click", () => {
-    const date = document.getElementById("date").value;
-    const start = document.getElementById("start").value;
-    const end = document.getElementById("end").value;
-    const pause = parseInt(document.getElementById("pause").value) || 0;
-    const homeoffice = document.getElementById("homeoffice").checked;
-    const notes = document.getElementById("notes").value;
+textarea {
+    resize: none;
+}
 
-    if (!date || !start || !end) {
-        alert("Bitte alle Pflichtfelder ausfüllen!");
-        return;
-    }
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    const startTime = new Date(`1970-01-01T${start}:00`);
-    const endTime = new Date(`1970-01-01T${end}:00`);
-    const workHours = ((endTime - startTime) / (1000 * 60 * 60)) - pause / 60;
+button:hover {
+    background-color: #2980b9;
+}
 
-    if (workHours < 0) {
-        alert("Arbeitsende muss nach Arbeitsbeginn liegen!");
-        return;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-    const data = { date, start, end, pause, homeoffice, workHours: workHours.toFixed(2), notes };
-    saveDataToFirebase(data); // Daten in Firebase speichern
-});
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
 
-// Firebase-Daten beim Laden der Seite abrufen
-loadDataFromFirebase();
+table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
