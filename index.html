@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zeiterfassung</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <h1>Zeiterfassung</h1>
@@ -56,6 +58,9 @@
         <p><strong>Monatssaldo:</strong> <span id="monthly-sum">0</span> Stunden</p>
         <p><strong>Gesamtsaldo (Jahr):</strong> <span id="yearly-sum">0</span> Stunden</p>
     </div>
+
+    <!-- PDF-Export -->
+    <button id="export-pdf">Monatsreport als PDF exportieren</button>
 
     <script src="script.js"></script>
 </body>
