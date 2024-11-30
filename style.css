@@ -1,8 +1,7 @@
-/* Allgemeine Einstellungen */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #f0f8ff; /* Heller Blauton als Hintergrund */
+    background-color: #f0f8ff; /* Heller Blauton */
     color: #333;
     line-height: 1.6;
 }
@@ -14,12 +13,11 @@ h1, h2 {
     text-shadow: 1px 1px 2px #ddd;
 }
 
-/* Formular */
 form {
     max-width: 600px;
     margin: 0 auto 30px auto;
     padding: 20px;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4); /* Farbverlauf: Rosa zu Hellpink */
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4); /* Farbverlauf */
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -44,12 +42,12 @@ input, textarea, button {
 
 input:focus, textarea:focus {
     outline: none;
-    border-color: #e67e22; /* Orange */
+    border-color: #e67e22;
     box-shadow: 0 0 5px rgba(230, 126, 34, 0.5);
 }
 
 button {
-    background-color: #3498db; /* Blau */
+    background-color: #3498db;
     color: white;
     border: none;
     font-weight: bold;
@@ -58,16 +56,15 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9; /* Dunkleres Blau */
+    background-color: #2980b9;
     transform: scale(1.05);
 }
 
-/* Tabelle */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: linear-gradient(135deg, #f6d365, #fda085); /* Farbverlauf: Gelb zu Orange */
+    background: linear-gradient(135deg, #f6d365, #fda085); /* Farbverlauf */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -77,24 +74,29 @@ table {
 table th, table td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Transparente weiße Linie */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 table th {
-    background-color: #e74c3c; /* Roter Kopfbereich */
+    background-color: #e74c3c;
     color: white;
     font-weight: bold;
 }
 
 table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.1); /* Leicht transparenter Hintergrund */
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 table tr:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Hover-Effekt */
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
-#data-table {
-    max-width: 1000px;
+#summary {
+    max-width: 600px;
     margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
