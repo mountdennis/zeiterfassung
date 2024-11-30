@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zeiterfassung</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <h1>Zeiterfassung</h1>
+
     <form id="time-tracker">
         <label for="date">Datum:</label>
         <input type="date" id="date" required><br>
@@ -31,6 +34,7 @@
     </form>
 
     <h2>Erfasste Daten</h2>
+    <button id="export-pdf">Monatsreport als PDF exportieren</button>
     <table id="data-table" border="1">
         <thead>
             <tr>
@@ -45,6 +49,13 @@
         </thead>
         <tbody></tbody>
     </table>
+
+    <h2>Zusammenfassung</h2>
+    <div id="summary">
+        <p><strong>Wochensaldo:</strong> <span id="weekly-sum">0</span> Stunden</p>
+        <p><strong>Monatssaldo:</strong> <span id="monthly-sum">0</span> Stunden</p>
+        <p><strong>Gesamtsaldo (Jahr):</strong> <span id="yearly-sum">0</span> Stunden</p>
+    </div>
 
     <script src="script.js"></script>
 </body>
