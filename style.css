@@ -42,3 +42,30 @@ button:hover {
     background-color: #2980b9;
     transform: scale(1.05);
 }
+/* Standard-Design bleibt erhalten */
+
+/* Zusätzliche Anpassungen für mobile Geräte */
+@media (max-width: 600px) {
+    form {
+        max-width: 100%; /* Formular füllt den Bildschirm aus */
+        padding: 10px; /* Weniger Innenabstand */
+        margin: 10px; /* Weniger Außenabstand */
+    }
+
+    input, textarea, button {
+        font-size: 16px; /* Größere Schrift für bessere Lesbarkeit */
+        padding: 10px; /* Etwas mehr Platz für Finger */
+    }
+
+    table {
+        font-size: 14px; /* Kleinere Schriftgröße für die Tabelle */
+    }
+
+    table th, table td {
+        padding: 8px; /* Weniger Platz in der Tabelle */
+    }
+
+    button {
+        font-size: 16px; /* Einheitliche Größe für Buttons */
+    }
+}
