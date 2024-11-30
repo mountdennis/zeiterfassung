@@ -73,3 +73,53 @@ function updateSummary() {
         if (getWeekNumber(entryDate) === currentWeek && entryDate.getFullYear() === currentYear) {
             weeklySum += workHours;
        
+document.getElementById("export-pdf").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Titel und Überschrift
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(18);
+    doc.text("Monatsreport - Zeiterfassung", 10, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Erstellt am: ${new Date().toLocaleDateString()}`, 10, 30);
+
+    // Tabellenkopf definieren
+    const tableColumn = [
+        "Datum",
+        "Arbeitsbeginn",
+        "Arbeitsende",
+        "Pause (min)",
+        "Homeoffice",
+        "Arbeitsstunden",
+        "Notizen",
+    ];
+
+    // Daten aus der Tabelle holen
+    const allData = JSON.parse(localStorage.getItem("timeData")) || [];
+    const tableRows = [];
+
+    allData.forEach((entry) => {
+        tableRows.push([
+            entry.date,
+            entry.start,
+            entry.end,
+            entry.pause,
+            entry.homeoffice ? "Ja" : "Nein",
+            entry.workHours,
+            entry.notes || "",
+        ]);
+    });
+
+    // Tabelleninhalt hinzufügen
+    doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 40,
+        theme: "striped",
+    });
+
+    // PDF speichern
+    doc.save(`Monatsreport_${new Date().toLocaleDateString()}.pdf`);
+});
