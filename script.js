@@ -109,6 +109,26 @@ function getWeekNumber(d) {
     return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
 }
 
+// Firebase-Konfiguration
+const firebaseConfig = {
+    apiKey: "AIzaSyASBbff8ynu8QZqBnUXEUm2fwP0EuQC6xk",
+  authDomain: "zeiterfassung-cadf1.firebaseapp.com",
+  databaseURL: "https://zeiterfassung-cadf1-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "zeiterfassung-cadf1",
+  storageBucket: "zeiterfassung-cadf1.firebasestorage.app",
+  messagingSenderId: "250175428731",
+  appId: "1:250175428731:web:be0060330ea7114cfc2ade",
+  measurementId: "G-0MFXY3S6WW"
+};
+
+// Firebase initialisieren
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+
        
 document.getElementById("export-pdf").addEventListener("click", () => {
     const { jsPDF } = window.jspdf;
