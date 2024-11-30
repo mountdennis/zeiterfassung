@@ -60,6 +60,7 @@ function updateSummary() {
     let monthlySum = 0;
     let yearlySum = 0;
 
+    // Aktuelle Woche, Monat und Jahr berechnen
     const currentWeek = getWeekNumber(now);
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -68,10 +69,46 @@ function updateSummary() {
         const entryDate = new Date(entry.date);
         const workHours = parseFloat(entry.workHours);
 
-        if (isNaN(workHours)) return;
+        // Debugging: Zeige die aktuellen Werte in der Konsole
+        console.log(`Eintrag: ${entry.date}, Stunden: ${workHours}`);
 
+        if (isNaN(workHours)) {
+            console.warn(`Ungültige Arbeitsstunden für Datum ${entry.date}: ${entry.workHours}`);
+            return; // Fehlerhafte Daten überspringen
+        }
+
+        // Wochensaldo berechnen
         if (getWeekNumber(entryDate) === currentWeek && entryDate.getFullYear() === currentYear) {
             weeklySum += workHours;
+        }
+
+        // Monatssaldo berechnen
+        if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
+            monthlySum += workHours;
+        }
+
+        // Jahressaldo berechnen
+        if (entryDate.getFullYear() === currentYear) {
+            yearlySum += workHours;
+        }
+    });
+
+    // Debugging: Zeige die berechneten Summen
+    console.log(`Wochensaldo: ${weeklySum}, Monatssaldo: ${monthlySum}, Jahressaldo: ${yearlySum}`);
+
+    // Werte in das HTML einfügen
+    document.getElementById("weekly-sum").textContent = weeklySum.toFixed(2);
+    document.getElementById("monthly-sum").textContent = monthlySum.toFixed(2);
+    document.getElementById("yearly-sum").textContent = yearlySum.toFixed(2);
+}
+
+// Funktion, um die Kalenderwoche zu berechnen
+function getWeekNumber(d) {
+    const oneJan = new Date(d.getFullYear(), 0, 1);
+    const numberOfDays = Math.floor((d - oneJan) / (24 * 60 * 60 * 1000));
+    return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+}
+
        
 document.getElementById("export-pdf").addEventListener("click", () => {
     const { jsPDF } = window.jspdf;
